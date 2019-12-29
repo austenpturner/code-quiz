@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Code Quiz</title>
+
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+    <nav>
+        <span id="highscores-link">
+            <a href="highscores.html">View Highscores</a>
+        </span>
+        <span id="time">Time: </span>
+    </nav>
+
+    <main id="quiz">
+        <h3 id="question"></h3>
+        <ul>
+            <li>
+                <input type="radio" id="choiceA" name="choice"/>
+                <label for="choiceA" class="choice"></label>
+                <span class="result-msg"></span>
+            </li>
+            <li>
+                <input type="radio" id="choiceB" name="choice"/>
+                <label for="choiceB" class="choice"></label>
+                <span class="result-msg"></span>
+            </li>
+            <li>
+                <input type="radio" id="choiceC" name="choice"/>
+                <label for="choiceC" class="choice"></label>
+                <span class="result-msg"></span>
+            </li>
+            <li>
+                <input type="radio" id="choiceD" name="choice"/>
+                <label for="choiceD" class="choice"></label>
+                <span class="result-msg"></span>
+            </li>
+        </ul>
+        <div>
+            <button type="submit" id="submit-btn">Submit</button>
+            <button type="submit" id="next-btn">Next</button>
+        </div>
+    </main>
+    
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
