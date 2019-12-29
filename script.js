@@ -1,3 +1,4 @@
+// DOM elements
 const questionElement = document.getElementById('question');
 const choiceElements = document.getElementsByClassName('choice');
 const resultMsg = document.getElementsByClassName('result-msg');
@@ -7,19 +8,21 @@ const timerElement = document.getElementById('time');
 const userListElement = document.getElementById('user-list');
 const removeScoresBtn = document.getElementById('clear-scores-btn');
 
-let finalScoreMsg = document.createElement('p');
-let initialsLabel = document.createElement('label');
-let initialsInput = document.createElement('input');
-let submitInitialsBtn = document.createElement('button');
-
-let userInitialsElement = document.getElementsByClassName('user-initials');
-let userScoreElement = document.getElementsByClassName('user-score');
-
 const choiceA = document.getElementById('choiceA');
 const choiceB = document.getElementById('choiceB');
 const choiceC = document.getElementById('choiceC');
 const choiceD = document.getElementById('choiceD');
 
+let userInitialsElement = document.getElementsByClassName('user-initials');
+let userScoreElement = document.getElementsByClassName('user-score');
+
+// Elements added to DOM
+let finalScoreMsg = document.createElement('p');
+let initialsLabel = document.createElement('label');
+let initialsInput = document.createElement('input');
+let submitInitialsBtn = document.createElement('button');
+
+// Quiz variables
 const radioBtns = [choiceA, choiceB, choiceC, choiceD];
 
 const quizItems = [
@@ -48,13 +51,16 @@ let userScore = 0;
 let userInitials;
 let users;
 
+// Condition to set users array to user data saved in local storage
 if (JSON.parse(localStorage.getItem('Users')) != null) {
     users = JSON.parse(localStorage.getItem('Users'))
 } else {
     users = [];
 }
 
+// Function to add button click events and call quiz functions when page is loaded
 window.onload = function() {
+    // if page is quiz page
     if (document.querySelector('main').getAttribute('id') === 'quiz') {
         submitAnswerBtn.addEventListener('click', function() {
             getResult();
@@ -75,7 +81,7 @@ window.onload = function() {
         quizTimer();
         getQuizItem();
     } 
-    
+    // if page is highscores page
     if (document.querySelector('main').getAttribute('id') === 'highscores') {
         displayUsers();
         removeScoresBtn.addEventListener('click', function() {
@@ -84,6 +90,7 @@ window.onload = function() {
     }
 };
 
+// Function to display a random quiz item
 function getQuizItem() {
     // get a random index from quizItems array
     let itemIndex = Math.floor(Math.random() * quizItems.length);
@@ -114,8 +121,7 @@ function getQuizItem() {
     }
 }
 
-// Function to get answer for current quiz question
-
+// Function to output answer for current quiz item
 function getItemAnswer() {
     // loop through quizItems array
     for (var i = 0; i < quizItems.length; i++) {
@@ -131,8 +137,7 @@ function getItemAnswer() {
     }
 }
 
-// Function to get radioBtn checked by user
-
+// Function to find which radioBtn is checked by user
 function getCheckedRadioBtn() {
     // loop through radioBtns 
     for (let i = 0; i < radioBtns.length; i++) {
@@ -140,20 +145,19 @@ function getCheckedRadioBtn() {
         if (radioBtns[i].checked) {
             // if radioBtn in question is checked then get id attribute value of that radioBtn
             let radioBtnId= radioBtns[i].getAttribute("id");
-            // return id value of radioBtn checked by the user
+            // return id value of radioBtn
             return radioBtnId;
         }
     } 
 }
 
-// Function to get choice associated with checked radio btn
-
+// Function to get user choice associated with user checked radio btn
 function getUserChoice() {
     // loop through choiceElements aka radioBtn label elements
     for (let i = 0; i < choiceElements.length; i ++) {
         // get label for attribute value
         let choiceForValue = choiceElements[i].getAttribute('for');
-        // Call getCheckedRadioBtn function and get id of radioBtn checked by user
+        // Call getCheckedRadioBtn function to get id of radioBtn checked by user
         let radioBtnId = getCheckedRadioBtn();
         // find the label with the for value that matches the radioBtn id 
         if (choiceForValue === radioBtnId) {
@@ -165,42 +169,51 @@ function getUserChoice() {
     }
 }
 
-// Function to get result of quiz item and assign result "correct" or "wrong" string value
-
+// Function to get result of quiz item and assign result string value to "correct" or "wrong" 
 function getResult() {
     // call getUserChoice function to output the value of the user's choice
     let userChoiceValue = getUserChoice();
-    // call the getItemAnswer function to outout the answer to the current quiz item
+    // call the getItemAnswer function to output the answer to the current quiz item
     let itemAnswer = getItemAnswer();
     // check to see if the user's choice is the quiz item answer
     if (userChoiceValue === itemAnswer) {
-        // if the user choice is the answer then return "correct"
+        // if the user choice is the answer then assign "correct"
         result = 'correct';
+        // give the user a point
         userScore++;
+        // give user more time
         time += 10;
-        // if the user choice is not the answer then return "wrong"
     } else {
+        // if the user choice is not the answer then assign "wrong"
         result = 'wrong';
+        // take time away
         time -= 10;
     }
 }
 
-// Function to display result on screen for user to see
-
+// Function to display result next to user choice
 function displayResult() {
+    // loop through resultMsg span elements
     for (let i = 0; i < resultMsg.length; i++) {
         let resultSpan = resultMsg[i];
+        // traverse to label  element prior to span element
         let label = resultSpan.previousElementSibling;
+        // get for attribute value of label
         let labelName = label.getAttribute('for');
+        // get radioBtn that user checked
         let checkedRadioBtnId = getCheckedRadioBtn();
+        // check to see if that this is the label for radioBtn
         if (checkedRadioBtnId === labelName) {
+            // if label and radioBtn are a pair set span to quiz item result
             resultSpan.textContent = result;
         } else {
+            // otherwise leave span content empty
             resultSpan.textContent = '';
         }
     }
 }
 
+// Function to clear checked radioBtn, resultMsg, choices and question
 function clearQuiz() {
     for (let i = 0; i < resultMsg.length; i++) {
         resultMsg[i].textContent = '';
@@ -214,6 +227,7 @@ function clearQuiz() {
     questionElement.textContent = '';
 }
 
+// Function to hide quiz elements and display end-of-quiz elements when quiz is over
 function quizOver() {
     // hide radio buttons, submit button and next button
     for (let i = 0; i < radioBtns.length; i++) {
@@ -222,27 +236,30 @@ function quizOver() {
     submitAnswerBtn.style.display = "none";
     nextQuestionBtn.style.display = "none";
     
+    // display end-of-quiz message
     questionElement.textContent = "The quiz is over";
-    
+    // display user score
     finalScoreMsg.textContent = 'Your final score: ' + userScore;
     document.querySelector('ul').appendChild(finalScoreMsg);
-    
+    // display user initials input label
     initialsLabel.setAttribute('for', 'initials-input');
     initialsLabel.textContent = 'Enter initials:';
     document.querySelector('ul').appendChild(initialsLabel);
-    
+    // display user initials input
     initialsInput.setAttribute('id', 'initials-input');
     document.querySelector('ul').appendChild(initialsInput);
-    
+    // display submit button
     submitInitialsBtn.textContent = 'submit';
     document.querySelector('ul').appendChild(submitInitialsBtn);
 }
 
+// Function to initialize and start quiz timer
 function quizTimer() {
     timerElement.textContent = 'Time: ' + time;
     timer = setInterval( function() {
         time--;
         timerElement.textContent = 'Time: ' + time;
+        // if the timer reaches 0 then stop the timer and end the quiz
         if (time === 0) {
             clearInterval(timer);
             clearQuiz();
@@ -251,39 +268,37 @@ function quizTimer() {
     }, 1000)
 }
 
+// Function to save user initials and score to local storage
 function saveUserData() {
     userInitials = initialsInput.value;
-    console.log(userInitials);
-    console.log(userScore);
-
+    // create user object
     let user = {
         initials: userInitials,
         score: userScore
     };
-    console.log(user);
-
+    // add user object to users array
     users.push(user);
-    console.log(users);
-
     localStorage.setItem('Users', JSON.stringify(users));
-
-    console.log(JSON.parse(localStorage.getItem('Users')));
 }
 
+// Function to display user data on highscores page
 function displayUsers() {
+    // loop through users array
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
+        // get user initials value
         let initials = user['initials'];
+        // get user score value
         let score = user['score'];
-
+        // create new list item and add it to the user list
         let userListItem = document.createElement('li');
         userListElement.appendChild(userListItem);
-
+        // create new span element, give it a class, set it's content to user initials, append to list item
         let userInitialsSpan = document.createElement('span');
         userInitialsSpan.setAttribute('class', 'user-initials');
         userInitialsSpan.textContent = initials;
         userListItem.appendChild(userInitialsSpan);
-
+        // create new span element, give it a class, set it's content to user score, append to list item
         let userScoreSpan = document.createElement('span');
         userScoreSpan.setAttribute('class', 'user-score');
         userScoreSpan.textContent = score;
@@ -291,13 +306,16 @@ function displayUsers() {
     }
 }
 
+// Function to remove user data
 function clearUserData() {
+    // clear user data displayed in browser
     for (let i = 0; i < userInitialsElement.length; i++) {
         userInitialsElement[i].textContent = ''
     }
     for (let i = 0; i < userScoreElement.length; i++) {
         userScoreElement[i].textContent = ''
     }
+    // remove user data from local storage
     localStorage.removeItem('Users');
 }
 
