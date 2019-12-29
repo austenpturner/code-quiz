@@ -51,6 +51,7 @@ let timer;
 let userScore = 0;
 let userInitials;
 let users;
+let responses = 0;
 
 // Condition to set users array to user data saved in local storage
 if (JSON.parse(localStorage.getItem('Users')) != null) {
@@ -68,21 +69,26 @@ window.onload = function() {
         submitChoiceBtn.addEventListener('click', function() {
             let userResponded = checkForUserResponse();
             if (userResponded) {
+                responses++;
                 evaluateUserChoice();
                 displayResult();
                 if (usedQuizItemIndex.length === quizItems.length) {
                     clearInterval(timer);
+                    nextQuestionBtn.textContent = 'Finish quiz';
                 }
+            } else {
+                selectAnswerMsg.textContent = 'Please select an answer';
             }
         });
         nextQuestionBtn.addEventListener('click', function() {
-                clearQuiz();
-                if (usedQuizItemIndex.length === quizItems.length) {
-                    clearInterval(timer);
-                    quizOver();
-                } else {
+            clearQuiz();
+            if (usedQuizItemIndex.length === quizItems.length) {
+                clearInterval(timer);
+                addBonusPoints();
+                quizOver();
+            } else {
                 displayQuizItem();
-                }  
+            }  
         });
         saveInitialsBtn.addEventListener('click', function() {
             saveUserData();
@@ -126,6 +132,21 @@ function displayQuizItem() {
         choiceElements[i].textContent = currentChoice;
         choiceValues.splice(choiceIndex, 1);
     }
+}
+
+// Function to start quiz timer and display time
+function startQuizTimer() {
+    timerElement.textContent = 'Time: ' + time;
+    timer = setInterval( function() {
+        time--;
+        timerElement.textContent = 'Time: ' + time;
+        // if the timer reaches 0 then stop the timer and end the quiz
+        if (time === 0) {
+            clearInterval(timer);
+            clearQuiz();
+            quizOver();
+        }
+    }, 1000)
 }
 
 // Function to output answer for current quiz item
@@ -184,8 +205,6 @@ function checkForUserResponse() {
             return true;
         } 
     }
-    selectAnswerMsg.textContent = 'Please select an answer';
-    return false;
 }
 
 // Function to determine if choice user selected is the same as the answer and update quiz variables
@@ -235,6 +254,21 @@ function displayResult() {
     }
 }
 
+// Function to add bonus points if user finishes quiz before time runs out
+function addBonusPoints() {
+    if (responses === quizItems.length && time > 0) {
+        if (time <= 10) {
+            userScore++;
+        } else if (time <= 20) {
+            userScore += 2;
+        } else if (time <= 30) {
+            userScore += 3;
+        } else {
+            userScore += 4;
+        }
+    }
+}
+
 // Function to clear checked radioBtn, resultMsg, choices and question
 function clearQuiz() {
     for (let i = 0; i < resultMsg.length; i++) {
@@ -273,21 +307,6 @@ function quizOver() {
     // display submit button
     saveInitialsBtn.textContent = 'Save score';
     document.querySelector('ul').appendChild(saveInitialsBtn);
-}
-
-// Function to start quiz timer and display time
-function startQuizTimer() {
-    timerElement.textContent = 'Time: ' + time;
-    timer = setInterval( function() {
-        time--;
-        timerElement.textContent = 'Time: ' + time;
-        // if the timer reaches 0 then stop the timer and end the quiz
-        if (time === 0) {
-            clearInterval(timer);
-            clearQuiz();
-            quizOver();
-        }
-    }, 1000)
 }
 
 // Function to save user initials and score to local storage
