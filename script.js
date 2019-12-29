@@ -188,6 +188,11 @@ function getResult() {
         result = 'wrong';
         // take time away
         time -= 10;
+        if (time <= 0) {
+            clearInterval(timer);
+            clearQuiz();
+            quizOver();
+        }
     }
 }
 
