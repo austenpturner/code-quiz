@@ -2,10 +2,11 @@
 const questionElement = document.getElementById('question');
 const choiceElements = document.getElementsByClassName('choice');
 const resultMsg = document.getElementsByClassName('result-msg');
-const submitAnswerBtn = document.getElementById('submit-btn');
-const nextQuestionBtn = document.getElementById('next-btn');
+const selectAnswerMsg = document.getElementById('select-answer-msg');
 const timerElement = document.getElementById('time');
 const userListElement = document.getElementById('user-list');
+const submitChoiceBtn = document.getElementById('submit-btn');
+const nextQuestionBtn = document.getElementById('next-btn');
 const removeScoresBtn = document.getElementById('clear-scores-btn');
 
 const choiceA = document.getElementById('choiceA');
@@ -20,32 +21,32 @@ let userScoreElement = document.getElementsByClassName('user-score');
 let finalScoreMsg = document.createElement('p');
 let initialsLabel = document.createElement('label');
 let initialsInput = document.createElement('input');
-let submitInitialsBtn = document.createElement('button');
+let saveInitialsBtn = document.createElement('button');
 
 // Quiz variables
 const radioBtns = [choiceA, choiceB, choiceC, choiceD];
 
 const quizItems = [
     { 
-        question: "this is a question",
-        choices: ['answer1', 'answer2', 'answer3', 'answer4'],
-        answer: "answer1"
+        question: 'this is a question',
+        choices: ['choice1', 'choice2', 'choice3', 'choice4'],
+        answer: 'choice1'
     },
     { 
-        question: "this is another question",
-        choices: ['answer5', 'answer6', 'answer7', 'answer8'],
-        answer: "answer8"
+        question: 'this is another question',
+        choices: ['choice5', 'choice6', 'choice7', 'choice8'],
+        answer: 'choice8'
     },
     { 
-        question: "this is a different question",
-        choices: ['answer9', 'answer10', 'answer11', 'answer12'],
-        answer: "answer10"
+        question: 'this is a different question',
+        choices: ['choice9', 'choice10', 'choice11', 'choice12'],
+        answer: 'choice10'
     }
 ];
 
 let result = '';
 let usedQuizItemIndex = [];
-let time = 10;
+let time = 30;
 let timer;
 let userScore = 0;
 let userInitials;
@@ -62,28 +63,34 @@ if (JSON.parse(localStorage.getItem('Users')) != null) {
 window.onload = function() {
     // if page is quiz page
     if (document.querySelector('main').getAttribute('id') === 'quiz') {
-        submitAnswerBtn.addEventListener('click', function() {
-            getResult();
-            displayResult();
-        });
-        nextQuestionBtn.addEventListener('click', function() {
-            clearQuiz();
-            if (usedQuizItemIndex.length === quizItems.length) {
-                clearInterval(timer);
-                quizOver();
-            } else {
-                getQuizItem();
+        startQuizTimer();
+        displayQuizItem();
+        submitChoiceBtn.addEventListener('click', function() {
+            let userResponded = checkForUserResponse();
+            if (userResponded) {
+                evaluateUserChoice();
+                displayResult();
+                if (usedQuizItemIndex.length === quizItems.length) {
+                    clearInterval(timer);
+                }
             }
         });
-        submitInitialsBtn.addEventListener('click', function() {
+        nextQuestionBtn.addEventListener('click', function() {
+                clearQuiz();
+                if (usedQuizItemIndex.length === quizItems.length) {
+                    clearInterval(timer);
+                    quizOver();
+                } else {
+                displayQuizItem();
+                }  
+        });
+        saveInitialsBtn.addEventListener('click', function() {
             saveUserData();
         })
-        quizTimer();
-        getQuizItem();
     } 
     // if page is highscores page
     if (document.querySelector('main').getAttribute('id') === 'highscores') {
-        displayUsers();
+        displaySavedData();
         removeScoresBtn.addEventListener('click', function() {
             clearUserData();
         })
@@ -91,7 +98,7 @@ window.onload = function() {
 };
 
 // Function to display a random quiz item
-function getQuizItem() {
+function displayQuizItem() {
     // get a random index from quizItems array
     let itemIndex = Math.floor(Math.random() * quizItems.length);
     // check to see if that index has been used yet
@@ -144,7 +151,7 @@ function getCheckedRadioBtn() {
         // determine if radioBtn is checked
         if (radioBtns[i].checked) {
             // if radioBtn in question is checked then get id attribute value of that radioBtn
-            let radioBtnId= radioBtns[i].getAttribute("id");
+            let radioBtnId = radioBtns[i].getAttribute('id');
             // return id value of radioBtn
             return radioBtnId;
         }
@@ -169,8 +176,20 @@ function getUserChoice() {
     }
 }
 
-// Function to get result of quiz item and assign result string value to "correct" or "wrong" 
-function getResult() {
+// Function to check if user has checked a radio button
+function checkForUserResponse() {
+    for (let i = 0; i < radioBtns.length; i++) {
+        if (radioBtns[i].checked) {
+            selectAnswerMsg.textContent = '';
+            return true;
+        } 
+    }
+    selectAnswerMsg.textContent = 'Please select an answer';
+    return false;
+}
+
+// Function to determine if choice user selected is the same as the answer and update quiz variables
+function evaluateUserChoice() {
     // call getUserChoice function to output the value of the user's choice
     let userChoiceValue = getUserChoice();
     // call the getItemAnswer function to output the answer to the current quiz item
@@ -188,6 +207,7 @@ function getResult() {
         result = 'wrong';
         // take time away
         time -= 10;
+        // if time is now 0 or less quiz is over
         if (time <= 0) {
             clearInterval(timer);
             clearQuiz();
@@ -211,9 +231,6 @@ function displayResult() {
         if (checkedRadioBtnId === labelName) {
             // if label and radioBtn are a pair set span to quiz item result
             resultSpan.textContent = result;
-        } else {
-            // otherwise leave span content empty
-            resultSpan.textContent = '';
         }
     }
 }
@@ -236,13 +253,13 @@ function clearQuiz() {
 function quizOver() {
     // hide radio buttons, submit button and next button
     for (let i = 0; i < radioBtns.length; i++) {
-        radioBtns[i].style.display = "none";
+        radioBtns[i].style.display = 'none';
     }
-    submitAnswerBtn.style.display = "none";
-    nextQuestionBtn.style.display = "none";
+    submitChoiceBtn.style.display = 'none';
+    nextQuestionBtn.style.display = 'none';
     
     // display end-of-quiz message
-    questionElement.textContent = "The quiz is over";
+    questionElement.textContent = 'The quiz is over';
     // display user score
     finalScoreMsg.textContent = 'Your final score: ' + userScore;
     document.querySelector('ul').appendChild(finalScoreMsg);
@@ -254,12 +271,12 @@ function quizOver() {
     initialsInput.setAttribute('id', 'initials-input');
     document.querySelector('ul').appendChild(initialsInput);
     // display submit button
-    submitInitialsBtn.textContent = 'submit';
-    document.querySelector('ul').appendChild(submitInitialsBtn);
+    saveInitialsBtn.textContent = 'Save score';
+    document.querySelector('ul').appendChild(saveInitialsBtn);
 }
 
-// Function to initialize and start quiz timer
-function quizTimer() {
+// Function to start quiz timer and display time
+function startQuizTimer() {
     timerElement.textContent = 'Time: ' + time;
     timer = setInterval( function() {
         time--;
@@ -287,7 +304,7 @@ function saveUserData() {
 }
 
 // Function to display user data on highscores page
-function displayUsers() {
+function displaySavedData() {
     // loop through users array
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
