@@ -4,6 +4,7 @@ const choiceElements = document.getElementsByClassName('choice');
 const resultMsg = document.getElementsByClassName('result-msg');
 const selectAnswerMsg = document.getElementById('select-answer-msg');
 const timerElement = document.getElementById('time');
+const quizListElement = document.getElementById('quiz-list');
 const userListElement = document.getElementById('user-list');
 const submitChoiceBtn = document.getElementById('submit-btn');
 const nextQuestionBtn = document.getElementById('next-btn');
@@ -22,6 +23,7 @@ let finalScoreMsg = document.createElement('p');
 let initialsLabel = document.createElement('label');
 let initialsInput = document.createElement('input');
 let saveInitialsBtn = document.createElement('button');
+let enterInitialsMsg = document.createElement('p');
 
 // Quiz variables
 const radioBtns = [choiceA, choiceB, choiceC, choiceD];
@@ -91,7 +93,13 @@ window.onload = function() {
             }  
         });
         saveInitialsBtn.addEventListener('click', function() {
-            saveUserData();
+            if (!initialsInput.value) {
+                enterInitialsMsg.textContent = 'Please enter your initials';
+                quizListElement.appendChild(enterInitialsMsg);
+            } else {
+                saveUserData();
+                displaySavedMsg();
+            }
         })
     } 
     // if page is highscores page
@@ -296,17 +304,17 @@ function quizOver() {
     questionElement.textContent = 'The quiz is over';
     // display user score
     finalScoreMsg.textContent = 'Your final score: ' + userScore;
-    document.querySelector('ul').appendChild(finalScoreMsg);
+    quizListElement.appendChild(finalScoreMsg);
     // display user initials input label
     initialsLabel.setAttribute('for', 'initials-input');
     initialsLabel.textContent = 'Enter initials:';
-    document.querySelector('ul').appendChild(initialsLabel);
+    quizListElement.appendChild(initialsLabel);
     // display user initials input
     initialsInput.setAttribute('id', 'initials-input');
-    document.querySelector('ul').appendChild(initialsInput);
+    quizListElement.appendChild(initialsInput);
     // display submit button
     saveInitialsBtn.textContent = 'Save score';
-    document.querySelector('ul').appendChild(saveInitialsBtn);
+    quizListElement.appendChild(saveInitialsBtn);
 }
 
 // Function to save user initials and score to local storage
@@ -320,6 +328,21 @@ function saveUserData() {
     // add user object to users array
     users.push(user);
     localStorage.setItem('Users', JSON.stringify(users));
+}
+
+// Function to change page display after user saves their score
+function displaySavedMsg() {
+    enterInitialsMsg.textContent = '';
+    initialsLabel.style.display = 'none';
+    initialsInput.style.display = 'none'; 
+    saveInitialsBtn.textContent = '';
+    finalScoreMsg.textContent = 'Your score has been saved';
+    let homePageLink = document.createElement('a');
+    homePageLink.setAttribute('href', 'index.html');
+    finalScoreMsg.appendChild(homePageLink);
+    let homeButton = document.createElement('button');
+    homeButton.textContent = 'Take quiz again';
+    homePageLink.appendChild(homeButton);
 }
 
 // Function to display user data on highscores page
