@@ -47,6 +47,8 @@ const quizItems = [
 ];
 
 let currentAnswer;
+let currentChoice;
+let currentResultSpan;
 let result = '';
 let usedQuizItemIndex = [];
 let time = (quizItems.length * 15);
@@ -70,11 +72,10 @@ window.onload = function() {
     }
     if (document.querySelector('main').getAttribute('id') === 'quiz') {
         startQuizTimer();
-        displayQuizItem();
+        renderQuizItem();
         submitChoiceBtn.addEventListener('click', function() {
-            getUserResponse();
+            getUserChoice();
             evaluateUserChoice();
-            displayResult();
             if (usedQuizItemIndex.length === quizItems.length) {
                 clearInterval(timer);
                 nextQuestionBtn.textContent = 'Finish quiz';
@@ -87,7 +88,7 @@ window.onload = function() {
                 addBonusPoints();
                 quizOver();
             } else {
-                displayQuizItem();
+                renderQuizItem();
             }  
         });
         saveInitialsBtn.addEventListener('click', function() {
@@ -109,18 +110,15 @@ window.onload = function() {
 };
 
 // Function to display a random quiz item
-function displayQuizItem() {
+function renderQuizItem() {
     let itemIndex = Math.floor(Math.random() * quizItems.length);
     while (usedQuizItemIndex.indexOf(itemIndex) > -1) {
         itemIndex = Math.floor(Math.random() * quizItems.length);
     }
     usedQuizItemIndex.push(itemIndex);
     let currentItem = quizItems[itemIndex];
-    //console.log(currentItem);
     let questionKey = Object.keys(currentItem)[0];
-    //console.log(questionKey);
     let questionValue = currentItem[questionKey];
-    //console.log(questionValue);
     questionElement.textContent = questionValue;
     let choicesKey = Object.keys(currentItem)[1];
     let choiceValues = currentItem[choicesKey];
@@ -131,11 +129,9 @@ function displayQuizItem() {
         choiceValues.splice(choiceIndex, 1);
     }
     let answerKey = Object.keys(currentItem)[2];
-    //console.log(answerKey);
     let answerValue = currentItem[answerKey];
-    //console.log(answerValue);
     currentAnswer = answerValue;
-    console.log(currentAnswer);
+    // console.log(currentAnswer);
 }
 
 // Function to start quiz timer and display time
@@ -154,54 +150,32 @@ function startQuizTimer() {
 }
 
 // Function to check if user has checked a radio button
-function getUserResponse() {
+function getUserChoice() {
+    // loop through buttons
     for (let i = 0; i < radioBtns.length; i++) {
+        // if a button is checked
         if (radioBtns[i].checked) {
-            // if radioBtn in question is checked then get id attribute value of that radioBtn
-            let radioBtnId = radioBtns[i].getAttribute('id');
-            // return id value of radioBtn
             selectAnswerMsg.textContent = '';
             responses++;
-            return radioBtnId;
-            // return true;
+            currentChoice = choiceElements[i].textContent;
+            currentResultSpan = resultMsg[i];
+            return currentChoice;
         }
     }
+    // if a button is not checked tell user to pick a choice
     selectAnswerMsg.textContent = 'Please select an answer';
-}
-
-// Function to get user choice associated with user checked radio btn
-function getUserChoice() {
-    // loop through choiceElements aka radioBtn label elements
-    for (let i = 0; i < choiceElements.length; i ++) {
-        // get label for attribute value
-        let choiceForValue = choiceElements[i].getAttribute('for');
-        // get id of radioBtn checked by user
-        let radioBtnId = getUserResponse();
-        // find the label with the for value that matches the radioBtn id 
-        if (choiceForValue === radioBtnId) {
-            // get choice that's been set to the textContent of that label
-            let userChoiceValue = choiceElements[i].textContent;
-            // return the choice selected by the user
-            return userChoiceValue;
-        }
-    }
 }
 
 // Function to determine if choice user selected is the same as the answer and update quiz variables
 function evaluateUserChoice() {
-    // call getUserChoice function to output the value of the user's choice
-    let userChoiceValue = getUserChoice();
-    // check to see if the user's choice is the quiz item answer
-    if (userChoiceValue === currentAnswer) {
-        // if the user choice is the answer then assign "correct"
-        result = 'correct!';
+    if (currentChoice === currentAnswer) {
+        currentResultSpan.textContent = 'correct!';
         // give the user a point
         userScore++;
         // give user more time
         time += 10;
     } else {
-        // if the user choice is not the answer then assign "wrong"
-        result = 'wrong';
+        currentResultSpan.textContent = 'wrong';
         // take time away
         time -= 10;
         // if time is now 0 or less quiz is over
@@ -209,25 +183,6 @@ function evaluateUserChoice() {
             clearInterval(timer);
             clearQuiz();
             quizOver();
-        }
-    }
-}
-
-// Function to display result next to user choice
-function displayResult() {
-    // loop through resultMsg span elements
-    for (let i = 0; i < resultMsg.length; i++) {
-        let resultSpan = resultMsg[i];
-        // traverse to label  element prior to span element
-        let label = resultSpan.previousElementSibling;
-        // get for attribute value of label
-        let labelName = label.getAttribute('for');
-        // get radioBtn that user checked
-        let checkedRadioBtnId = getUserResponse();
-        // check to see if that this is the label for radioBtn
-        if (checkedRadioBtnId === labelName) {
-            // if label and radioBtn are a pair set span to quiz item result
-            resultSpan.textContent = result;
         }
     }
 }
