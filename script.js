@@ -8,11 +8,10 @@ const choiceD = document.getElementById('choiceD');
 const choiceElements = document.getElementsByClassName('choice');
 const resultMsgElements = document.getElementsByClassName('result-msg');
 const selectAnswerMsg = document.getElementById('select-answer-msg');
+const submitChoiceBtn = document.getElementById('submit-btn');
 
 const quizListElement = document.getElementById('quiz-list');
 const userListElement = document.getElementById('user-list');
-const submitChoiceBtn = document.getElementById('submit-btn');
-const nextQuestionBtn = document.getElementById('next-btn');
 const removeScoresBtn = document.getElementById('clear-scores-btn');
 
 let userInitialsElement = document.getElementsByClassName('user-initials');
@@ -77,17 +76,17 @@ window.onload = function() {
             getUserChoice();
             if (userSelectedChoice) {
                 evaluateUserChoice();
+                setTimeout(function() {
+                    clearQuiz();
+                    if (usedQuizItemIndex.length === quizItems.length) {
+                        clearInterval(timer);
+                        addBonusPoints();
+                        quizOver();
+                    } else {
+                        renderQuizItem();
+                    }
+                }, 1500);
             }
-        });
-        nextQuestionBtn.addEventListener('click', function() {
-            clearQuiz();
-            if (usedQuizItemIndex.length === quizItems.length) {
-                clearInterval(timer);
-                addBonusPoints();
-                quizOver();
-            } else {
-                renderQuizItem();
-            }  
         });
         saveInitialsBtn.addEventListener('click', function() {
             if (!initialsInput.value) {
@@ -173,7 +172,6 @@ function evaluateUserChoice() {
         time += 10;
         if (usedQuizItemIndex.length === quizItems.length) {
             clearInterval(timer);
-            nextQuestionBtn.textContent = 'Finish quiz';
         }
     } else {
         currentResultMsgElement.textContent = 'wrong';
@@ -223,7 +221,6 @@ function quizOver() {
         radioBtns[i].style.display = 'none';
     }
     submitChoiceBtn.style.display = 'none';
-    nextQuestionBtn.style.display = 'none';
     
     // display end-of-quiz message
     questionElement.textContent = 'The quiz is over';
