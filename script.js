@@ -72,17 +72,12 @@ window.onload = function() {
         startQuizTimer();
         displayQuizItem();
         submitChoiceBtn.addEventListener('click', function() {
-            let userResponded = checkForUserResponse();
-            if (userResponded) {
-                responses++;
-                evaluateUserChoice();
-                displayResult();
-                if (usedQuizItemIndex.length === quizItems.length) {
-                    clearInterval(timer);
-                    nextQuestionBtn.textContent = 'Finish quiz';
-                }
-            } else {
-                selectAnswerMsg.textContent = 'Please select an answer';
+            getUserResponse();
+            evaluateUserChoice();
+            displayResult();
+            if (usedQuizItemIndex.length === quizItems.length) {
+                clearInterval(timer);
+                nextQuestionBtn.textContent = 'Finish quiz';
             }
         });
         nextQuestionBtn.addEventListener('click', function() {
@@ -140,7 +135,7 @@ function displayQuizItem() {
     let answerValue = currentItem[answerKey];
     //console.log(answerValue);
     currentAnswer = answerValue;
-    //console.log(currentAnswer);
+    console.log(currentAnswer);
 }
 
 // Function to start quiz timer and display time
@@ -158,28 +153,20 @@ function startQuizTimer() {
     }, 1000)
 }
 
-// Function to find which radioBtn is checked by user
-function getCheckedRadioBtn() {
-    // loop through radioBtns 
+// Function to check if user has checked a radio button
+function getUserResponse() {
     for (let i = 0; i < radioBtns.length; i++) {
-        // determine if radioBtn is checked
         if (radioBtns[i].checked) {
             // if radioBtn in question is checked then get id attribute value of that radioBtn
             let radioBtnId = radioBtns[i].getAttribute('id');
             // return id value of radioBtn
-            return radioBtnId;
-        }
-    } 
-}
-
-// Function to check if user has checked a radio button
-function checkForUserResponse() {
-    for (let i = 0; i < radioBtns.length; i++) {
-        if (radioBtns[i].checked) {
             selectAnswerMsg.textContent = '';
-            return true;
-        } 
+            responses++;
+            return radioBtnId;
+            // return true;
+        }
     }
+    selectAnswerMsg.textContent = 'Please select an answer';
 }
 
 // Function to get user choice associated with user checked radio btn
@@ -188,8 +175,8 @@ function getUserChoice() {
     for (let i = 0; i < choiceElements.length; i ++) {
         // get label for attribute value
         let choiceForValue = choiceElements[i].getAttribute('for');
-        // Call getCheckedRadioBtn function to get id of radioBtn checked by user
-        let radioBtnId = getCheckedRadioBtn();
+        // get id of radioBtn checked by user
+        let radioBtnId = getUserResponse();
         // find the label with the for value that matches the radioBtn id 
         if (choiceForValue === radioBtnId) {
             // get choice that's been set to the textContent of that label
@@ -236,7 +223,7 @@ function displayResult() {
         // get for attribute value of label
         let labelName = label.getAttribute('for');
         // get radioBtn that user checked
-        let checkedRadioBtnId = getCheckedRadioBtn();
+        let checkedRadioBtnId = getUserResponse();
         // check to see if that this is the label for radioBtn
         if (checkedRadioBtnId === labelName) {
             // if label and radioBtn are a pair set span to quiz item result
