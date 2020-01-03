@@ -46,9 +46,10 @@ const quizItems = [
     }
 ];
 
+let currentAnswer;
 let result = '';
 let usedQuizItemIndex = [];
-let time = 30;
+let time = (quizItems.length * 15);
 let timer;
 let userScore = 0;
 let userInitials;
@@ -64,7 +65,9 @@ if (JSON.parse(localStorage.getItem('Users')) != null) {
 
 // Function to add button click events and call quiz functions when page is loaded
 window.onload = function() {
-    // if page is quiz page
+    if (document.querySelector('main').getAttribute('id') === 'home') {
+        timerElement.textContent = 'Time: ' + time;
+    }
     if (document.querySelector('main').getAttribute('id') === 'quiz') {
         startQuizTimer();
         displayQuizItem();
@@ -102,7 +105,6 @@ window.onload = function() {
             }
         })
     } 
-    // if page is highscores page
     if (document.querySelector('main').getAttribute('id') === 'highscores') {
         displaySavedData();
         removeScoresBtn.addEventListener('click', function() {
@@ -113,26 +115,19 @@ window.onload = function() {
 
 // Function to display a random quiz item
 function displayQuizItem() {
-    // get a random index from quizItems array
     let itemIndex = Math.floor(Math.random() * quizItems.length);
-    // check to see if that index has been used yet
     while (usedQuizItemIndex.indexOf(itemIndex) > -1) {
-        // keep looking for a index that has not been used
         itemIndex = Math.floor(Math.random() * quizItems.length);
     }
-    // now add index to the array of used index
     usedQuizItemIndex.push(itemIndex);
-    // get the item object at that index
     let currentItem = quizItems[itemIndex];
-    // get the question key of that item
+    //console.log(currentItem);
     let questionKey = Object.keys(currentItem)[0];
-    // get the string value for that question
+    //console.log(questionKey);
     let questionValue = currentItem[questionKey];
-    // set questionElement.textContent to string value
+    //console.log(questionValue);
     questionElement.textContent = questionValue;
-    // get the choices key of that item
     let choicesKey = Object.keys(currentItem)[1];
-    // get the choices array values, loop through them and randomly assign them to answerElement.textContent
     let choiceValues = currentItem[choicesKey];
     for (var i = 0; i < choiceElements.length; i++) {
         let choiceIndex = Math.floor(Math.random() * choiceValues.length);
@@ -140,6 +135,12 @@ function displayQuizItem() {
         choiceElements[i].textContent = currentChoice;
         choiceValues.splice(choiceIndex, 1);
     }
+    let answerKey = Object.keys(currentItem)[2];
+    //console.log(answerKey);
+    let answerValue = currentItem[answerKey];
+    //console.log(answerValue);
+    currentAnswer = answerValue;
+    //console.log(currentAnswer);
 }
 
 // Function to start quiz timer and display time
@@ -157,22 +158,6 @@ function startQuizTimer() {
     }, 1000)
 }
 
-// Function to output answer for current quiz item
-function getItemAnswer() {
-    // loop through quizItems array
-    for (var i = 0; i < quizItems.length; i++) {
-        // get question for each quizItem array object
-        questionValue = quizItems[i]['question'];
-        // check to see if that question is the question currently written to the page
-        if (questionElement.textContent === questionValue) {
-            // if it is the current question on the page get the answer value of that question object
-            answerValue = quizItems[i]['answer'];
-            // return that answer
-            return answerValue;
-        }
-    }
-}
-
 // Function to find which radioBtn is checked by user
 function getCheckedRadioBtn() {
     // loop through radioBtns 
@@ -185,6 +170,16 @@ function getCheckedRadioBtn() {
             return radioBtnId;
         }
     } 
+}
+
+// Function to check if user has checked a radio button
+function checkForUserResponse() {
+    for (let i = 0; i < radioBtns.length; i++) {
+        if (radioBtns[i].checked) {
+            selectAnswerMsg.textContent = '';
+            return true;
+        } 
+    }
 }
 
 // Function to get user choice associated with user checked radio btn
@@ -205,26 +200,14 @@ function getUserChoice() {
     }
 }
 
-// Function to check if user has checked a radio button
-function checkForUserResponse() {
-    for (let i = 0; i < radioBtns.length; i++) {
-        if (radioBtns[i].checked) {
-            selectAnswerMsg.textContent = '';
-            return true;
-        } 
-    }
-}
-
 // Function to determine if choice user selected is the same as the answer and update quiz variables
 function evaluateUserChoice() {
     // call getUserChoice function to output the value of the user's choice
     let userChoiceValue = getUserChoice();
-    // call the getItemAnswer function to output the answer to the current quiz item
-    let itemAnswer = getItemAnswer();
     // check to see if the user's choice is the quiz item answer
-    if (userChoiceValue === itemAnswer) {
+    if (userChoiceValue === currentAnswer) {
         // if the user choice is the answer then assign "correct"
-        result = 'correct';
+        result = 'correct!';
         // give the user a point
         userScore++;
         // give user more time
@@ -335,7 +318,7 @@ function displaySavedMsg() {
     enterInitialsMsg.textContent = '';
     initialsLabel.style.display = 'none';
     initialsInput.style.display = 'none'; 
-    saveInitialsBtn.textContent = '';
+    saveInitialsBtn.style.display = 'none';
     finalScoreMsg.textContent = 'Your score has been saved';
     let homePageLink = document.createElement('a');
     homePageLink.setAttribute('href', 'index.html');
