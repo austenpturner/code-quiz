@@ -11,6 +11,7 @@ body {
     line-height: 1.4em;
 }
 main {
+    /* border: 1px solid black; */
     display: flex;
     flex-direction: column;
     margin: 10px auto; 
@@ -24,8 +25,14 @@ h3 {
     margin: 10px 0;
 }
 button {
+    background-color: blueviolet;
+    border: none;
+    border-radius: 5px;
+    box-shadow: -2px 2px 3px rgba(0,0,0,0.5);
+    color: white;
     cursor: pointer;
-    /* width: 100px; */
+    padding: 8px;
+    margin: 8px;
 }
 a {
     color: black;
@@ -53,8 +60,8 @@ nav span {
     margin-top: 62px;
 }
 .highscores span {
-    text-align: center;
     margin: 10px auto;
+    text-align: center;
 }
 .highscores div {
     margin: 10px auto;
