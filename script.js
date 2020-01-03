@@ -1,19 +1,19 @@
 // DOM elements
-const questionElement = document.getElementById('question');
-const choiceElements = document.getElementsByClassName('choice');
-const resultMsg = document.getElementsByClassName('result-msg');
-const selectAnswerMsg = document.getElementById('select-answer-msg');
 const timerElement = document.getElementById('time');
+const questionElement = document.getElementById('question');
+const choiceA = document.getElementById('choiceA');
+const choiceB = document.getElementById('choiceB');
+const choiceC = document.getElementById('choiceC');
+const choiceD = document.getElementById('choiceD');
+const choiceElements = document.getElementsByClassName('choice');
+const resultMsgElements = document.getElementsByClassName('result-msg');
+const selectAnswerMsg = document.getElementById('select-answer-msg');
+
 const quizListElement = document.getElementById('quiz-list');
 const userListElement = document.getElementById('user-list');
 const submitChoiceBtn = document.getElementById('submit-btn');
 const nextQuestionBtn = document.getElementById('next-btn');
 const removeScoresBtn = document.getElementById('clear-scores-btn');
-
-const choiceA = document.getElementById('choiceA');
-const choiceB = document.getElementById('choiceB');
-const choiceC = document.getElementById('choiceC');
-const choiceD = document.getElementById('choiceD');
 
 let userInitialsElement = document.getElementsByClassName('user-initials');
 let userScoreElement = document.getElementsByClassName('user-score');
@@ -46,17 +46,17 @@ const quizItems = [
     }
 ];
 
-let currentAnswer;
-let currentChoice;
-let currentResultSpan;
-let result = '';
-let usedQuizItemIndex = [];
 let time = (quizItems.length * 15);
 let timer;
+let currentAnswer;
+let usedQuizItemIndex = [];
+let userSelectedChoice;
+let responses = 0;
+let currentChoice;
+let currentResultMsgElement;
 let userScore = 0;
 let userInitials;
 let users;
-let responses = 0;
 
 // Condition to set users array to user data saved in local storage
 if (JSON.parse(localStorage.getItem('Users')) != null) {
@@ -75,10 +75,8 @@ window.onload = function() {
         renderQuizItem();
         submitChoiceBtn.addEventListener('click', function() {
             getUserChoice();
-            evaluateUserChoice();
-            if (usedQuizItemIndex.length === quizItems.length) {
-                clearInterval(timer);
-                nextQuestionBtn.textContent = 'Finish quiz';
+            if (userSelectedChoice) {
+                evaluateUserChoice();
             }
         });
         nextQuestionBtn.addEventListener('click', function() {
@@ -109,7 +107,7 @@ window.onload = function() {
     }
 };
 
-// Function to display a random quiz item
+// Function to get and display a random quiz item
 function renderQuizItem() {
     let itemIndex = Math.floor(Math.random() * quizItems.length);
     while (usedQuizItemIndex.indexOf(itemIndex) > -1) {
@@ -131,10 +129,9 @@ function renderQuizItem() {
     let answerKey = Object.keys(currentItem)[2];
     let answerValue = currentItem[answerKey];
     currentAnswer = answerValue;
-    // console.log(currentAnswer);
 }
 
-// Function to start quiz timer and display time
+// Function to display time and start quiz timer
 function startQuizTimer() {
     timerElement.textContent = 'Time: ' + time;
     timer = setInterval( function() {
@@ -149,34 +146,37 @@ function startQuizTimer() {
     }, 1000)
 }
 
-// Function to check if user has checked a radio button
+// Function to get values of user choice
 function getUserChoice() {
     // loop through buttons
     for (let i = 0; i < radioBtns.length; i++) {
-        // if a button is checked
+        // if a button is checked assign values to choice variables
         if (radioBtns[i].checked) {
-            selectAnswerMsg.textContent = '';
+            userSelectedChoice = true;
             responses++;
+            selectAnswerMsg.textContent = '';
             currentChoice = choiceElements[i].textContent;
-            currentResultSpan = resultMsg[i];
-            return currentChoice;
+            currentResultMsgElement = resultMsgElements[i];
+            return;
         }
     }
     // if a button is not checked tell user to pick a choice
+    userSelectedChoice = false;
     selectAnswerMsg.textContent = 'Please select an answer';
 }
 
 // Function to determine if choice user selected is the same as the answer and update quiz variables
 function evaluateUserChoice() {
     if (currentChoice === currentAnswer) {
-        currentResultSpan.textContent = 'correct!';
-        // give the user a point
+        currentResultMsgElement.textContent = 'correct!';
         userScore++;
-        // give user more time
         time += 10;
+        if (usedQuizItemIndex.length === quizItems.length) {
+            clearInterval(timer);
+            nextQuestionBtn.textContent = 'Finish quiz';
+        }
     } else {
-        currentResultSpan.textContent = 'wrong';
-        // take time away
+        currentResultMsgElement.textContent = 'wrong';
         time -= 10;
         // if time is now 0 or less quiz is over
         if (time <= 0) {
@@ -202,18 +202,18 @@ function addBonusPoints() {
     }
 }
 
-// Function to clear checked radioBtn, resultMsg, choices and question
+// Function to clear current quiz question, choices, user choice, and result message
 function clearQuiz() {
-    for (let i = 0; i < resultMsg.length; i++) {
-        resultMsg[i].textContent = '';
+    questionElement.textContent = '';
+    for (let i = 0; i < choiceElements.length; i++) {
+        choiceElements[i].textContent = '';
     }
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].checked = false;
     }
-    for (let i = 0; i < choiceElements.length; i++) {
-        choiceElements[i].textContent = '';
+    for (let i = 0; i < resultMsgElements.length; i++) {
+        resultMsgElements[i].textContent = '';
     }
-    questionElement.textContent = '';
 }
 
 // Function to hide quiz elements and display end-of-quiz elements when quiz is over
