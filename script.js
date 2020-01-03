@@ -50,10 +50,9 @@ let timer;
 let currentAnswer;
 let usedQuizItemIndex = [];
 let userSelectedChoice;
-let responses = 0;
 let currentChoice;
 let currentResultMsgElement;
-let userScore = 0;
+let userScore;
 let userInitials;
 let users;
 
@@ -84,7 +83,6 @@ window.onload = function() {
                     // if there are not more questions, the quiz is over
                     if (usedQuizItemIndex.length === quizItems.length) {
                         clearInterval(timer);
-                        addBonusPoints();
                         quizOver();
                     } else {
                         // otherwise, get another quiz item and enable the submit button
@@ -167,7 +165,6 @@ function getUserChoice() {
         // if a button is checked assign values to choice variables
         if (radioBtns[i].checked) {
             userSelectedChoice = true;
-            responses++;
             selectAnswerMsg.textContent = '';
             currentChoice = choiceElements[i].textContent;
             currentResultMsgElement = resultMsgElements[i];
@@ -183,8 +180,6 @@ function getUserChoice() {
 function evaluateUserChoice() {
     if (currentChoice === currentAnswer) {
         currentResultMsgElement.textContent = 'correct!';
-        userScore++;
-        time += 10;
         if (usedQuizItemIndex.length === quizItems.length) {
             clearInterval(timer);
         }
@@ -196,21 +191,6 @@ function evaluateUserChoice() {
             clearInterval(timer);
             clearQuiz();
             quizOver();
-        }
-    }
-}
-
-// Function to add bonus points if user finishes quiz before time runs out
-function addBonusPoints() {
-    if (responses === quizItems.length && time > 0) {
-        if (time <= 10) {
-            userScore++;
-        } else if (time <= 20) {
-            userScore += 2;
-        } else if (time <= 30) {
-            userScore += 3;
-        } else {
-            userScore += 4;
         }
     }
 }
@@ -231,6 +211,7 @@ function clearQuiz() {
 
 // Function to hide quiz elements and display end-of-quiz elements when quiz is over
 function quizOver() {
+    userScore = time;
     // hide radio buttons, submit button and next button
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].style.display = 'none';
