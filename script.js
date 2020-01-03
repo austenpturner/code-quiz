@@ -75,6 +75,7 @@ window.onload = function() {
         submitChoiceBtn.addEventListener('click', function() {
             getUserChoice();
             if (userSelectedChoice) {
+                submitChoiceBtn.setAttribute('disabled', true);
                 evaluateUserChoice();
                 setTimeout(function() {
                     clearQuiz();
@@ -84,6 +85,7 @@ window.onload = function() {
                         quizOver();
                     } else {
                         renderQuizItem();
+                        submitChoiceBtn.removeAttribute('disabled');
                     }
                 }, 1500);
             }
