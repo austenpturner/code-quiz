@@ -21,32 +21,33 @@
         <h3 id="question"></h3>
         <ul id="quiz-list">
             <li>
-                <input type="radio" id="choiceA" name="choice"/>
+                <input type="radio" id="choiceA" class="radio-btn" name="choice"/>
                 <label for="choiceA" class="choice"></label>
                 <span class="result-msg"></span>
             </li>
             <li>
-                <input type="radio" id="choiceB" name="choice"/>
+                <input type="radio" id="choiceB" class="radio-btn" name="choice"/>
                 <label for="choiceB" class="choice"></label>
                 <span class="result-msg"></span>
             </li>
             <li>
-                <input type="radio" id="choiceC" name="choice"/>
+                <input type="radio" id="choiceC" class="radio-btn" name="choice"/>
                 <label for="choiceC" class="choice"></label>
                 <span class="result-msg"></span>
             </li>
             <li>
-                <input type="radio" id="choiceD" name="choice"/>
+                <input type="radio" id="choiceD" class="radio-btn" name="choice"/>
                 <label for="choiceD" class="choice"></label>
                 <span class="result-msg"></span>
             </li>
         </ul>
         <div>
-            <button type="submit" id="submit-btn">Submit answer</button>
+            <button id="submit-btn">Submit answer</button>
         </div>
         <p id="select-answer-msg"></p>
     </main>
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

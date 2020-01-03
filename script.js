@@ -1,21 +1,15 @@
 // DOM elements
 const timerElement = document.getElementById('time');
 const questionElement = document.getElementById('question');
-const choiceA = document.getElementById('choiceA');
-const choiceB = document.getElementById('choiceB');
-const choiceC = document.getElementById('choiceC');
-const choiceD = document.getElementById('choiceD');
-const choiceElements = document.getElementsByClassName('choice');
-const resultMsgElements = document.getElementsByClassName('result-msg');
-const selectAnswerMsg = document.getElementById('select-answer-msg');
-const submitChoiceBtn = document.getElementById('submit-btn');
-
 const quizListElement = document.getElementById('quiz-list');
-const userListElement = document.getElementById('user-list');
-const removeScoresBtn = document.getElementById('clear-scores-btn');
+const radioBtns = document.getElementsByClassName('radio-btn');
+const choiceLabels = document.getElementsByClassName('choice');
+const resultMsgElements = document.getElementsByClassName('result-msg');
+const submitChoiceBtn = document.getElementById('submit-btn');
+const selectAnswerMsg = document.getElementById('select-answer-msg');
 
-let userInitialsElement = document.getElementsByClassName('user-initials');
-let userScoreElement = document.getElementsByClassName('user-score');
+const userListElement = document.getElementById('user-list');
+const removeScoresBtn = document.getElementById('remove-scores-btn');
 
 // Elements added to DOM
 let finalScoreMsg = document.createElement('p');
@@ -24,9 +18,10 @@ let initialsInput = document.createElement('input');
 let saveInitialsBtn = document.createElement('button');
 let enterInitialsMsg = document.createElement('p');
 
-// Quiz variables
-const radioBtns = [choiceA, choiceB, choiceC, choiceD];
+let userInitialsElement = document.getElementsByClassName('user-initials');
+let userScoreElement = document.getElementsByClassName('user-score');
 
+// Quiz variables
 const quizItems = [
     { 
         question: 'this is a question',
@@ -130,11 +125,11 @@ function renderQuizItem() {
     questionElement.textContent = questionValue;
     let choicesKey = Object.keys(currentItem)[1];
     let choiceValues = currentItem[choicesKey];
-    // loop through item choice values and assign them to choiceElements randomly
-    for (var i = 0; i < choiceElements.length; i++) {
+    // loop through item choice values and assign them to choiceLabels randomly
+    for (var i = 0; i < choiceLabels.length; i++) {
         let choiceIndex = Math.floor(Math.random() * choiceValues.length);
         let currentChoice = choiceValues[choiceIndex];
-        choiceElements[i].textContent = currentChoice;
+        choiceLabels[i].textContent = currentChoice;
         choiceValues.splice(choiceIndex, 1);
     }
     // get the item answer value and assign it to currentAnswer value
@@ -166,7 +161,7 @@ function getUserChoice() {
         if (radioBtns[i].checked) {
             userSelectedChoice = true;
             selectAnswerMsg.textContent = '';
-            currentChoice = choiceElements[i].textContent;
+            currentChoice = choiceLabels[i].textContent;
             currentResultMsgElement = resultMsgElements[i];
             return;
         }
@@ -198,8 +193,8 @@ function evaluateUserChoice() {
 // Function to clear current quiz question, choices, user choice, and result message
 function clearQuiz() {
     questionElement.textContent = '';
-    for (let i = 0; i < choiceElements.length; i++) {
-        choiceElements[i].textContent = '';
+    for (let i = 0; i < choiceLabels.length; i++) {
+        choiceLabels[i].textContent = '';
     }
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].checked = false;
