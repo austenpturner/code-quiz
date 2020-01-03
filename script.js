@@ -75,15 +75,19 @@ window.onload = function() {
         submitChoiceBtn.addEventListener('click', function() {
             getUserChoice();
             if (userSelectedChoice) {
+                // disable submit button while user choice is evaluated
                 submitChoiceBtn.setAttribute('disabled', true);
                 evaluateUserChoice();
+                // pause user interaction and show resultMsg for 1.5 seconds
                 setTimeout(function() {
                     clearQuiz();
+                    // if there are not more questions, the quiz is over
                     if (usedQuizItemIndex.length === quizItems.length) {
                         clearInterval(timer);
                         addBonusPoints();
                         quizOver();
                     } else {
+                        // otherwise, get another quiz item and enable the submit button
                         renderQuizItem();
                         submitChoiceBtn.removeAttribute('disabled');
                     }
@@ -91,9 +95,11 @@ window.onload = function() {
             }
         });
         saveInitialsBtn.addEventListener('click', function() {
+            // if the user did not enter their initials ask them to do so
             if (!initialsInput.value) {
                 enterInitialsMsg.textContent = 'Please enter your initials';
                 quizListElement.appendChild(enterInitialsMsg);
+            // if they did enter their initials then save their data and display saved message
             } else {
                 saveUserData();
                 displaySavedMsg();
@@ -101,7 +107,9 @@ window.onload = function() {
         })
     } 
     if (document.querySelector('main').getAttribute('id') === 'highscores') {
+        // display user initials and scores from local storage
         displaySavedData();
+        // delete local storage data and clear page if user clicks remove scores button
         removeScoresBtn.addEventListener('click', function() {
             clearUserData();
         })
@@ -111,22 +119,27 @@ window.onload = function() {
 // Function to get and display a random quiz item
 function renderQuizItem() {
     let itemIndex = Math.floor(Math.random() * quizItems.length);
+    // if a quiz item has already been used, pick another one
     while (usedQuizItemIndex.indexOf(itemIndex) > -1) {
         itemIndex = Math.floor(Math.random() * quizItems.length);
     }
+    // once quiz item has been used add to usedQuizItem array
     usedQuizItemIndex.push(itemIndex);
     let currentItem = quizItems[itemIndex];
     let questionKey = Object.keys(currentItem)[0];
     let questionValue = currentItem[questionKey];
+    // assign question value from current item to questionElement text content 
     questionElement.textContent = questionValue;
     let choicesKey = Object.keys(currentItem)[1];
     let choiceValues = currentItem[choicesKey];
+    // loop through item choice values and assign them to choiceElements randomly
     for (var i = 0; i < choiceElements.length; i++) {
         let choiceIndex = Math.floor(Math.random() * choiceValues.length);
         let currentChoice = choiceValues[choiceIndex];
         choiceElements[i].textContent = currentChoice;
         choiceValues.splice(choiceIndex, 1);
     }
+    // get the item answer value and assign it to currentAnswer value
     let answerKey = Object.keys(currentItem)[2];
     let answerValue = currentItem[answerKey];
     currentAnswer = answerValue;
@@ -274,9 +287,7 @@ function displaySavedData() {
     // loop through users array
     for (let i = 0; i < users.length; i++) {
         let user = users[i];
-        // get user initials value
         let initials = user['initials'];
-        // get user score value
         let score = user['score'];
         // create new list item and add it to the user list
         let userListItem = document.createElement('li');
