@@ -11,6 +11,9 @@ const selectAnswerMsg = document.getElementById('select-answer-msg');
 const userListElement = document.getElementById('user-list');
 const removeScoresBtn = document.getElementById('remove-scores-btn');
 
+let userInitialsElement = document.getElementsByClassName('user-initials');
+let userScoreElement = document.getElementsByClassName('user-score');
+
 // Elements added to DOM
 let finalScoreMsg = document.createElement('p');
 let initialsLabel = document.createElement('label');
@@ -18,28 +21,7 @@ let initialsInput = document.createElement('input');
 let saveInitialsBtn = document.createElement('button');
 let enterInitialsMsg = document.createElement('p');
 
-let userInitialsElement = document.getElementsByClassName('user-initials');
-let userScoreElement = document.getElementsByClassName('user-score');
-
 // Quiz variables
-const quizItems = [
-    { 
-        question: 'this is a question',
-        choices: ['choice1', 'choice2', 'choice3', 'choice4'],
-        answer: 'choice1'
-    },
-    { 
-        question: 'this is another question',
-        choices: ['choice5', 'choice6', 'choice7', 'choice8'],
-        answer: 'choice8'
-    },
-    { 
-        question: 'this is a different question',
-        choices: ['choice9', 'choice10', 'choice11', 'choice12'],
-        answer: 'choice10'
-    }
-];
-
 let time = (quizItems.length * 15);
 let timer;
 let currentAnswer;
@@ -84,12 +66,13 @@ window.onload = function() {
                         renderQuizItem();
                         submitChoiceBtn.removeAttribute('disabled');
                     }
-                }, 1500);
+                }, 1000);
             }
         });
         saveInitialsBtn.addEventListener('click', function() {
             // if the user did not enter their initials ask them to do so
             if (!initialsInput.value) {
+                enterInitialsMsg.setAttribute('id', 'enter-initials-msg');
                 enterInitialsMsg.textContent = 'Please enter your initials';
                 quizListElement.appendChild(enterInitialsMsg);
             // if they did enter their initials then save their data and display saved message
@@ -173,12 +156,15 @@ function getUserChoice() {
 
 // Function to determine if choice user selected is the same as the answer and update quiz variables
 function evaluateUserChoice() {
+    currentResultMsgElement.removeAttribute('id');
     if (currentChoice === currentAnswer) {
+        currentResultMsgElement.setAttribute('id', 'green');
         currentResultMsgElement.textContent = 'correct!';
         if (usedQuizItemIndex.length === quizItems.length) {
             clearInterval(timer);
         }
     } else {
+        currentResultMsgElement.setAttribute('id', 'red');
         currentResultMsgElement.textContent = 'wrong';
         time -= 10;
         // if time is now 0 or less quiz is over
@@ -271,7 +257,7 @@ function displaySavedData() {
         // create new span element, give it a class, set it's content to user initials, append to list item
         let userInitialsSpan = document.createElement('span');
         userInitialsSpan.setAttribute('class', 'user-initials');
-        userInitialsSpan.textContent = initials;
+        userInitialsSpan.textContent = initials + " : ";
         userListItem.appendChild(userInitialsSpan);
         // create new span element, give it a class, set it's content to user score, append to list item
         let userScoreSpan = document.createElement('span');
