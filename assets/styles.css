@@ -11,7 +11,6 @@ body {
     line-height: 1.4em;
 }
 main {
-    /* border: 1px solid black; */
     display: flex;
     flex-direction: column;
     margin: 10px auto; 
@@ -43,28 +42,46 @@ li {
     margin: 10px auto;
 }
 
-/* --- Navigation Styles --- */
+/* --- Header Styles --- */
 
-nav {
+header {
     display: flex;
     justify-content: space-between;
 }
-nav span {
+header span {
     margin: 10px;
     padding: 10px;
 }
 
+/* --- Quiz Page Styles --- */
+
+#select-answer-msg {
+    font-size: 14px;
+    font-style: italic;
+    margin: 10px;
+}
+
+#green {
+    color: green;
+    font-size: 13px;
+}
+#red {
+    color: red;
+    font-size: 13px;
+}
+
+#enter-initials-msg {
+    font-size: 14px;
+    font-style: italic;
+}
+
 /* --- Highscores Page Styles --- */
 
-.highscores {
+#highscores {
     margin-top: 62px;
 }
-.highscores span {
-    margin: 10px auto;
-    text-align: center;
-}
-.highscores div {
-    margin: 10px auto;
+#highscores ul {
+    margin-left: 20px;
 }
 
 /* --- Media Queries --- */
