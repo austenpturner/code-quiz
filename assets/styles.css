@@ -38,6 +38,7 @@ a {
     text-decoration: none;
 }
 li {
+    line-height: 30px;
     list-style: none;
     margin: 10px auto;
 }
