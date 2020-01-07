@@ -42,63 +42,65 @@ if (JSON.parse(localStorage.getItem('Users')) != null) {
 
 // Function to add button click events and call quiz functions when page is loaded
 window.onload = function() {
-    if (document.querySelector('main').getAttribute('id') === 'home') {
-        timerElement.textContent = 'Time: ' + time;
-    }
-    if (document.querySelector('main').getAttribute('id') === 'quiz') {
-        startQuizTimer();
-        renderQuizItem();
-        submitChoiceBtn.addEventListener('click', function() {
-            getUserChoice();
-            if (userSelectedChoice) {
-                // disable submit button while user choice is evaluated
-                submitChoiceBtn.setAttribute('disabled', true);
-                evaluateUserChoice();
-                // pause user interaction and show resultMsg for 1.5 seconds
-                setTimeout(function() {
-                    clearQuiz();
-                    // if there are not more questions, the quiz is over
-                    if (usedQuizItemIndex.length === quizItems.length) {
-                        clearInterval(timer);
-                        quizOver();
-                    } else {
-                        // otherwise, get another quiz item and enable the submit button
-                        renderQuizItem();
-                        submitChoiceBtn.removeAttribute('disabled');
-                    }
-                }, 1000);
-            }
-        });
-        saveInitialsBtn.addEventListener('click', function() {
-            // if the user did not enter their initials ask them to do so
-            if (!initialsInput.value) {
-                enterInitialsMsg.setAttribute('id', 'enter-initials-msg');
-                enterInitialsMsg.textContent = 'Please enter your initials';
-                quizListElement.appendChild(enterInitialsMsg);
-            // if they did enter their initials then save their data and display saved message
-            } else {
-                saveUserData();
-                displaySavedMsg();
-            }
-        })
-    } 
-    if (document.querySelector('main').getAttribute('id') === 'highscores') {
-        // display user initials and scores from local storage
-        displaySavedData();
-        // delete local storage data and clear page if user clicks remove scores button
-        removeScoresBtn.addEventListener('click', function() {
-            clearUserData();
-        })
+    let currentPage = document.querySelector('main').getAttribute('id');
+    switch (currentPage) {
+        case 'home' :
+            timerElement.textContent = 'Time: ' + time;
+            break;
+        case 'quiz' :
+            startQuizTimer();
+            renderQuizItem();
+            submitChoiceBtn.addEventListener('click', function() {
+                getUserChoice();
+                if (userSelectedChoice) {
+                    // disable submit button while user choice is evaluated
+                    submitChoiceBtn.setAttribute('disabled', true);
+                    evaluateUserChoice();
+                    // pause user interaction and show resultMsg for 1.5 seconds
+                    setTimeout(function() {
+                        clearQuiz();
+                        // if there are not more questions, the quiz is over
+                        if (usedQuizItemIndex.length === quizItems.length) {
+                            clearInterval(timer);
+                            quizOver();
+                        } else {
+                            // otherwise, get another quiz item and enable the submit button
+                            renderQuizItem();
+                            submitChoiceBtn.removeAttribute('disabled');
+                        }
+                    }, 1000);
+                }
+            });
+            saveInitialsBtn.addEventListener('click', function() {
+                // if the user did not enter their initials ask them to do so
+                if (!initialsInput.value) {
+                    enterInitialsMsg.setAttribute('id', 'enter-initials-msg');
+                    enterInitialsMsg.textContent = 'Please enter your initials';
+                    quizListElement.appendChild(enterInitialsMsg);
+                // if they did enter their initials then save their data and display saved message
+                } else {
+                    saveUserData();
+                    displaySavedMsg();
+                }
+            })
+            break;
+        case 'highscores' : 
+            // display user initials and scores from local storage
+            displaySavedData();
+            // delete local storage data and clear page if user clicks remove scores button
+            removeScoresBtn.addEventListener('click', function() {
+                clearUserData();
+            });
     }
 };
 
 // Function to get and display a random quiz item
 function renderQuizItem() {
-    let itemIndex = Math.floor(Math.random() * quizItems.length);
+    let itemIndex;
     // if a quiz item has already been used, pick another one
-    while (usedQuizItemIndex.indexOf(itemIndex) > -1) {
+    do {
         itemIndex = Math.floor(Math.random() * quizItems.length);
-    }
+    } while (usedQuizItemIndex.indexOf(itemIndex) > -1) 
     // once quiz item has been used add to usedQuizItem array
     usedQuizItemIndex.push(itemIndex);
     let currentItem = quizItems[itemIndex];
