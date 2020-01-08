@@ -35,12 +35,12 @@ const quizItems = [
         answer: 'force an element\'s padding and border into it\'s specified width and height values'
     },
     {
-        question: 'Which CSS property:value pair would you apply to an HTML element if you do not want it to show up on the page or take up space?',
+        question: 'Which CSS property and value would you apply to an HTML element if you do not want it to show up on the page or take up space?',
         choices: ['display: none', 'visibility: hidden', 'opacity: 0', 'opacity: 1'],
         answer: 'display: none'
     },
     {
-        question: 'Consider the array colors: ["blue", "red", "orange", "yellow"], which is equal to colors.indexOf("green")?',
+        question: 'What is the value of the .indexOf() method if the value is not found in the specified array?',
         choices: ['null', 'undefined', '0', '-1'],
         answer: '-1'
     },
@@ -55,19 +55,14 @@ const quizItems = [
         answer: '.shift()'
     },
     {
-        question: 'Which of the following is the correct way to link an external CSS stylesheet?',
-        choices: ['<link href = "styles.css">', '<styles href = "styles.css">', '<link src = "styles.css">', '<styles><a href = "styles.css"></a><styles>'],
-        answer: '<link href = "styles.css">'
+        question: 'Where does the method .appendChild() insert an element into the DOM?',
+        choices: ['as the last child element of the appended element', 'as a sibling of the appended element', 'as the first child element the appended element', 'as the only child of the appended element, replacing any existing child elements'],
+        answer: 'as the last child element of the appended element'
     },
     {
-        question: 'Consider the statement myList.appendChild("listItem"), where will listItem be inserted into the DOM?',
-        choices: ['as the last child element of myList', 'as a sibling of the element myList', 'as the first child element of myList', 'as the only child element of myList, replacing any existing child elements'],
-        answer: 'as the last child element of myList'
-    },
-    {
-        question: 'What semantic information does a <div> tag represent?',
-        choices: ['an important section of the document', 'the main section of the document', 'it holds no semantic information', 'a section of the document that could be removed'],
-        answer: 'it holds no semantic information'
+        question: 'What semantic information does a div tag represent?',
+        choices: ['an important section of the document', 'the main section of the document', 'it holds no important semantic information', 'a section of the document that could be removed'],
+        answer: 'it holds no important semantic information'
     },
     {
         question: 'Consider the selector .main-nav { background-color: grey }, what is the selector using to target an HTML element?',
@@ -75,9 +70,9 @@ const quizItems = [
         answer: 'class'
     },
     {
-        question: 'JavaScript loops will repeat a block of code over and over again until:',
-        choices: ['a condition is false', 'a condition is true', 'it gets to the end of the code block it is running', 'there are no more items to iterate through'],
-        answer: 'a condition is false'
+        question: 'JavaScript loops will repeat a block of code over and over again until',
+        choices: ['the condition is false', 'the condition is true', 'it gets to the end of the code block it is running', 'there are no more items to iterate through'],
+        answer: 'the condition is false'
     },
     {
         question: 'Consider the object myCat = { name: "Callie", breed: "calico", age: "10" }, which of the following is equal to the value of "Callie"?',
