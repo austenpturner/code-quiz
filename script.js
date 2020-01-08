@@ -22,14 +22,16 @@ let saveInitialsBtn = document.createElement('button');
 let enterInitialsMsg = document.createElement('p');
 
 // Quiz variables
-let time = (quizItems.length * 15);
+let timerValue = quizItems.length * 15;
+let seconds = timerValue % 60;
+let minutes = (timerValue - seconds) / 60;
+let userScore;
 let timer;
 let currentAnswer;
 let usedQuizItemIndex = [];
 let userSelectedChoice;
 let currentChoice;
 let currentResultMsgElement;
-let userScore;
 let userInitials;
 let users;
 
@@ -45,7 +47,11 @@ window.onload = function() {
     let currentPage = document.querySelector('main').getAttribute('id');
     switch (currentPage) {
         case 'home' :
-            timerElement.textContent = 'Time: ' + time;
+            if (seconds < 10) {
+                timerElement.textContent = minutes + ':0' + seconds;
+            } else {
+                timerElement.textContent = minutes + ':' + seconds;
+            }
             break;
         case 'quiz' :
             startQuizTimer();
@@ -62,6 +68,7 @@ window.onload = function() {
                         // if there are not more questions, the quiz is over
                         if (usedQuizItemIndex.length === quizItems.length) {
                             clearInterval(timer);
+                            userScore = minutes * 60 + seconds;
                             quizOver();
                         } else {
                             // otherwise, get another quiz item and enable the submit button
@@ -123,19 +130,29 @@ function renderQuizItem() {
     currentAnswer = answerValue;
 }
 
-// Function to display time and start quiz timer
 function startQuizTimer() {
-    timerElement.textContent = 'Time: ' + time;
+    if (seconds < 10) {
+        timerElement.textContent = minutes + ':0' + seconds;
+    } else {
+        timerElement.textContent = minutes + ':' + seconds;
+    }
     timer = setInterval( function() {
-        time--;
-        timerElement.textContent = 'Time: ' + time;
-        // if the timer reaches 0 then stop the timer and end the quiz
-        if (time === 0) {
+        seconds--;
+        if (seconds < 10) {
+            timerElement.textContent = minutes + ':0' + seconds
+        } else {
+            timerElement.textContent = minutes + ':' + seconds;
+        }
+        if (seconds === 0 && minutes === 0) {
             clearInterval(timer);
+            userScore = minutes * 60 + seconds;
             clearQuiz();
             quizOver();
+        } else if (seconds === 0) {
+            minutes --;
+            seconds += 60;
         }
-    }, 1000)
+    }, 1000);
 }
 
 // Function to get values of user choice
@@ -168,12 +185,18 @@ function evaluateUserChoice() {
     } else {
         currentResultMsgElement.setAttribute('id', 'red');
         currentResultMsgElement.textContent = 'wrong';
-        time -= 10;
-        // if time is now 0 or less quiz is over
-        if (time <= 0) {
-            clearInterval(timer);
-            clearQuiz();
-            quizOver();
+        if (seconds <= 10) {
+            let timeRoll = 10 - seconds;
+            seconds = 60 - timeRoll;
+            minutes--;
+        } else {
+            seconds -= 10;
+            if (seconds <= 0 && minutes <= 0) {
+                userScore = minutes * 60 + seconds;
+                clearInterval(timer);
+                clearQuiz();
+                quizOver();
+            }
         }
     }
 }
@@ -194,7 +217,7 @@ function clearQuiz() {
 
 // Function to hide quiz elements and display end-of-quiz elements when quiz is over
 function quizOver() {
-    userScore = time;
+    //userScore = time;
     // hide radio buttons, submit button and next button
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].style.display = 'none';
@@ -280,14 +303,4 @@ function clearUserData() {
     }
     // remove user data from local storage
     localStorage.removeItem('Users');
-}
-
-
-
-
-
-
-
-
-
-
+};
