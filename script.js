@@ -47,11 +47,7 @@ window.onload = function() {
     let currentPage = document.querySelector('main').getAttribute('id');
     switch (currentPage) {
         case 'home' :
-            if (seconds < 10) {
-                timerElement.textContent = minutes + ':0' + seconds;
-            } else {
-                timerElement.textContent = minutes + ':' + seconds;
-            }
+            printTime();
             break;
         case 'quiz' :
             startQuizTimer();
@@ -79,12 +75,8 @@ window.onload = function() {
                 }
             });
             saveInitialsBtn.addEventListener('click', function() {
-                // if the user did not enter their initials ask them to do so
                 if (!initialsInput.value) {
-                    enterInitialsMsg.setAttribute('id', 'enter-initials-msg');
-                    enterInitialsMsg.textContent = 'Please enter your initials';
-                    quizListElement.appendChild(enterInitialsMsg);
-                // if they did enter their initials then save their data and display saved message
+                    displayEnterInitialsMsg();
                 } else {
                     saveUserData();
                     displaySavedMsg();
@@ -92,9 +84,7 @@ window.onload = function() {
             })
             break;
         case 'highscores' : 
-            // display user initials and scores from local storage
             displaySavedData();
-            // delete local storage data and clear page if user clicks remove scores button
             removeScoresBtn.addEventListener('click', function() {
                 clearUserData();
             });
@@ -131,18 +121,15 @@ function renderQuizItem() {
 }
 
 function startQuizTimer() {
-    if (seconds < 10) {
-        timerElement.textContent = minutes + ':0' + seconds;
-    } else {
-        timerElement.textContent = minutes + ':' + seconds;
-    }
+    printTime();
     timer = setInterval( function() {
-        seconds--;
-        if (seconds < 10) {
-            timerElement.textContent = minutes + ':0' + seconds
+        if (seconds === 0) {
+            seconds = 59;
+            minutes--;
         } else {
-            timerElement.textContent = minutes + ':' + seconds;
+            seconds--;
         }
+        printTime();
         if (seconds === 0 && minutes === 0) {
             clearInterval(timer);
             userScore = minutes * 60 + seconds;
@@ -153,6 +140,14 @@ function startQuizTimer() {
             seconds += 60;
         }
     }, 1000);
+}
+
+function printTime() {
+    if (seconds < 10) {
+        timerElement.textContent = minutes + ':0' + seconds
+    } else {
+        timerElement.textContent = minutes + ':' + seconds;
+    } 
 }
 
 // Function to get values of user choice
@@ -217,7 +212,6 @@ function clearQuiz() {
 
 // Function to hide quiz elements and display end-of-quiz elements when quiz is over
 function quizOver() {
-    //userScore = time;
     // hide radio buttons, submit button and next button
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].style.display = 'none';
@@ -252,6 +246,12 @@ function saveUserData() {
     // add user object to users array
     users.push(user);
     localStorage.setItem('Users', JSON.stringify(users));
+}
+
+function displayEnterInitialsMsg() {
+    enterInitialsMsg.setAttribute('id', 'enter-initials-msg');
+    enterInitialsMsg.textContent = 'Please enter your initials';
+    quizListElement.appendChild(enterInitialsMsg);
 }
 
 // Function to change page display after user saves their score
