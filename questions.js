@@ -75,11 +75,6 @@ const quizItems = [
         answer: 'the condition is false'
     },
     {
-        question: 'Consider the object myCat = { name: "Callie", breed: "calico", age: "10" }, which of the following is equal to the value of "Callie"?',
-        choices: ['myCat[0]', 'myCat["name"]', 'myCat("name")', 'myCat[name]'],
-        answer: 'myCat["name"]'
-    },
-    {
         question: 'What is the relationship between the last index position in an array and the value of array.length?',
         choices: ['they will always be equal', 'array.length will always be one more than the last index position', 'array.length will always be one less than the last index position', 'it depends on the array'],
         answer: 'array.length will always be one more than the last index position'
