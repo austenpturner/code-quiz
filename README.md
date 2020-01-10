@@ -1,2 +1,27 @@
-# code-quiz
-UW BCS Homework Assignment #3
+# Code Quiz 
+
+## The Assignment
+This project was the 4th homework assignment for UW fullstack bootcamp. The goal was to use HTML, CSS and Javascript to make a timed quiz that will store a user's score using local storage and display scores on a highscores page. The user's score is calculated based on the time remaining. If the user selects an answer quickly and correctly they will score higher, if they select the wrong answer time is subtracted and resulting in a lower score. 
+
+## The Process
+I had a lot of fun writing the JavaScript for this project. This was the most code I've written for an assignment so far and the first time I've linked to multiple JavaScript files. I had to do a lot of pseudo coding, not just at the beginning but during the entire project. When something would break or I found a bug I'd grab my notebook and write down what was happening, what I wanted to happen, and a half-English-half-code solution.
+
+The biggest challanges were randomizing the questions and answer choices and creating a timer that would display minutes and seconds. Randomizing the questions and choices was difficult because it involved accessing different keys and values inside of the quizItems object. I also had to figure out how to store questions and choices that had already been used. I did this by creating empty arrays, adding used items to it, and then checking if items were in the array using the .indexOf() method. Displaying the time in minutes and seconds was mostly difficult because I had to do a bit of math. I kept running into the problem of the seconds going past zero and displaying a negative number. Eventually I discovered I needed a few different conditions based on the current number of seconds and then I either needed to decrease seconds or minutes as the timer counted down or when 10 seconds were subtracted from the time due to an incorrect answer. 
+
+## The Outcome
+The quiz begins on a home page where the user can find an explanation of the quiz, a link to the highscores page, how much time they'll have to complete the quiz, and a start quiz button. When the user begins the quiz they are taken to a quiz page where the question, four answers choices and submit button are displayed. The timer begins to count down immediately, displaying minutes and seconds remaining. The questions appear on the page at random, as well as their associated answers choices. That way the user will experience a slightly different quiz every time. The user then selects the radio button that corresponds with their choice and clicks the submit answer button to submit. If the user does not select a radio button before clicking the submit button a message will flash asking the user to please select a choice. When the user submits a choice the choice is evaluated to see if it matches the answer to that question. If it is a match, their answer is evaluated as correct and the "correct!" result message will appear so the user knows it was right. If the choice does not match the answer their choice is evaulated as wrong, the "wrong" message will appear and 10 seconds are subtracted from their remaining time. After 1 second the screen will clear and a new questions and choices are displayed. 
+
+As the quiz continues time will start to run out. When the timer reaches 30 seconds or below it will turn red, warning the user they are almost out of time. The quiz is over when time runs out or the user has answered all of the questions. The page will clear and then display a "quiz is over" message and the user's final score. Their score is calculated based on the total time left in seconds when the user finishes the quiz. The user is also given the option to enter their initials if they want to save their score. If the user has entered their initials when they click on the save score button their initials and scores are saved to local storage. If they have not entered anything in the initials input a message appears asking them to do so.
+
+When the user travels to the highscores page all user initials and scores that have been saved to local storage appear on the page. The user can clear these scores and remove them from local storage by clicking on the remove scores button. Or the user can travel back to the home page and take the quiz again by clicking on the "try again" button. 
+
+## Next Steps
+While the quiz design and layout is adequate for the assigment, I feel I could improve on some of the aesthetics which would add to user experience. First I would make the transitions a bit smoother when elements appear and disappear on the page so it's not quite as jarring for the user. For example, when the "correct!" and "wrong" result messages show up on the page I would like them to fade in and out. Also when the user clears scores from the highscores page I would like the user initials and scores slide off of the page. Furthermore I would make the user's scores appear on the highscores page in order from highest to lowest. 
+
+Besides aesthetics, I would like to add more quiz questions and an options to select different types of quizez. This way a user so choose a quiz based on difficulty (easy, medium, hard) or based on topic (HTML, CSS, JavaScript, All). Eventually it would be fun to make a program where a user could make their own quiz. A user would type in their questions and answers, store the quiz, and then have access to it later.
+
+## Thanks for reading! :smile:
+Please contact me with any questions or comments.
+
+My email: austenpturner@msn.com
+
