@@ -53,6 +53,10 @@ header span {
     margin: 10px;
     padding: 10px;
 }
+#time {
+    color: black;
+    transition: all 500ms ease-in;
+}
 
 /* --- Quiz Page Styles --- */
 
