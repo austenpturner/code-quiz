@@ -129,7 +129,8 @@ function clearQuiz() {
 
 // Function to hide quiz elements and display end-of-quiz elements when quiz is over
 function quizOver() {
-    // hide radio buttons, submit button and next button
+    // hide timer, radio buttons, submit button and next button
+    timerElement.textContent = '';
     for (let i = 0; i < radioBtns.length; i++) {
         radioBtns[i].style.display = 'none';
     }
