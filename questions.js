@@ -1,3 +1,5 @@
+// QUIZ QUESTIONS
+
 const quizItems = [
     {
         question: 'What goes in the head of an HTML document?',
