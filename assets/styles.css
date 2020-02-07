@@ -15,10 +15,13 @@ main {
     flex-direction: column;
     margin: 10px auto; 
     transition: width 1000ms ease;
-    width: 90%;
+    width: 85%;
 }
 h1, p, button {
     margin: 20px auto;
+}
+h1 {
+    font-size: 1.6em;
 }
 h3 {
     margin: 10px 0;
@@ -53,6 +56,9 @@ header span {
     margin: 10px;
     padding: 10px;
 }
+header span a {
+    font-weight: bold;
+}
 #time {
     color: black;
     transition: all 500ms ease-in;
@@ -60,6 +66,9 @@ header span {
 
 /* --- Quiz Page Styles --- */
 
+h3 {
+    min-height: 40px;
+}
 #select-answer-msg {
     font-size: 14px;
     font-style: italic;
@@ -74,10 +83,16 @@ header span {
     color: red;
     font-size: 13px;
 }
-
 #enter-initials-msg {
     font-size: 14px;
     font-style: italic;
+}
+#initials-input {
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 30px;
+    margin: 5px;
+    width: 80px;
 }
 
 /* --- Highscores Page Styles --- */
@@ -86,18 +101,38 @@ header span {
     margin-top: 62px;
 }
 #highscores ul {
-    margin-left: 20px;
+    margin: 20px auto;
+}
+#highscores div {
+    display: flex;
+    justify-content: center;
 }
 
 /* --- Media Queries --- */
 
+@media (min-width: 568px) {
+    h1 {
+        font-size: 1.9em;
+    }
+}
 @media (min-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+    header {
+        margin: 20px auto;
+        width: 90%;
+    }
     main {
-        width: 80%;
+        width: 70%;
     }
 }
 @media (min-width: 1200px) {
+    header {
+        margin-top: 30px;
+        width: 85%;
+    }
     main {
-        width: 70%;
+        width: 60%;
     }
 }
