@@ -15,13 +15,13 @@ As the quiz continues time will start to run out. When the timer reaches 30 seco
 
 When the user travels to the highscores page all user initials and scores that have been saved to local storage appear on the page. The user can clear these scores and remove them from local storage by clicking on the remove scores button. Or the user can travel back to the home page and take the quiz again by clicking on the "try again" button. 
 
+Link to deployed site: https://austenpturner.github.io/code-quiz/
+
 ## Next Steps
 While the quiz design and layout is adequate for the assigment, I feel I could improve on some of the aesthetics which would add to user experience. First I would make the transitions a bit smoother when elements appear and disappear on the page so it's not quite as jarring for the user. For example, when the "correct!" and "wrong" result messages show up on the page I would like them to fade in and out. Also when the user clears scores from the highscores page I would like the user initials and scores slide off of the page. Furthermore I would make the user's scores appear on the highscores page in order from highest to lowest. 
 
 Besides aesthetics, I would like to add more quiz questions and an options to select different types of quizez. This way a user so choose a quiz based on difficulty (easy, medium, hard) or based on topic (HTML, CSS, JavaScript, All). Eventually it would be fun to make a program where a user could make their own quiz. A user would type in their questions and answers, store the quiz, and then have access to it later.
 
 ## Thanks for reading! :smile:
-Please contact me with any questions or comments.
-
-My email: austenpturner@msn.com
+Please contact me with any questions or comments: austenpturner@msn.com
 
